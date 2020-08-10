@@ -31,8 +31,8 @@ function createMainWindow() {
 function createAboutWindow() {
   aboutWindow = new BrowserWindow({
     title: 'About Image-Shrink',
-    width: 300,
-    height: 300,
+    width: 500,
+    height: 500,
     icon: `${__dirname}/assets/icons/Icon_256x256.png`,
     resizable: false,
     backgroundColor: '#ddd',
@@ -61,10 +61,35 @@ app.on('ready', () => {
 
 // App Menus
 const menu = [
-  ...(isMac ? [{ role: 'appMenu' }] : []),
+  ...(isMac
+    ? [
+        {
+          label: app.name,
+          submenu: [
+            {
+              label: 'About',
+              click: createAboutWindow,
+            },
+          ],
+        },
+      ]
+    : []),
   {
     role: 'fileMenu',
   },
+  ...(!isMac
+    ? [
+        {
+          label: 'Help',
+          submenu: [
+            {
+              label: 'About',
+              click: createAboutWindow,
+            },
+          ],
+        },
+      ]
+    : []),
   ...(isDev
     ? [
         {
