@@ -1,0 +1,44 @@
+.container {
+  width: 400px;
+  margin-top: 70px;
+  padding: 0 20px;
+}
+
+.about {
+  width: 100%;
+}
+
+.brwos-div {
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+
+.btn {
+  width: 100%;
+}
+
+.output {
+  margin-top: 40px;
+}
+
+#output-path {
+  font-weight: bold;
+}
+
+input[type='range']::-webkit-slider-thumb {
+  background-color: #880e4f !important;
+}
+input[type='range']::-moz-range-thumb {
+  background-color: #880e4f !important;
+}
+input[type='range']::-ms-thumb {
+  background-color: #880e4f !important;
+}
+
+/***** These are to edit the thumb and the text inside the thumb *****/
+input[type='range'] + .thumb {
+  background-color: #dedede;
+}
+input[type='range'] + .thumb.active .value {
+  color: #880e4f !important;
+}
