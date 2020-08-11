@@ -1,10 +1,19 @@
+const path = require('path');
+const os = require('os');
+
 const {
   app,
   BrowserWindow,
   Menu,
   globalShortcut,
   ipcMain,
+  shell,
 } = require('electron');
+
+const imagemin = require('imagemin');
+const imageminMozjpeg = require('imagemin-mozjpeg');
+const imageminPngquant = require('imagemin-pngquant');
+const slash = require('slash');
 
 // Check Platform
 const isMac = process.platform === 'darwin' ? true : false;
@@ -117,8 +126,33 @@ const menu = [
 ];
 
 ipcMain.on('image:minimize', (e, options) => {
-  console.log(options);
+  options.dest = path.join(os.homedir(), 'pictures', 'imageshrink');
+  shrinkImage(options);
 });
+
+async function shrinkImage({ imgPath, quality, dest }) {
+  try {
+    const pngQuality = quality / 100;
+
+    const files = await imagemin([slash(imgPath)], {
+      destination: dest,
+      plugins: [
+        imageminMozjpeg({ quality }),
+        imageminPngquant({
+          quality: [pngQuality, pngQuality],
+        }),
+      ],
+    });
+    console.log(files);
+
+    // Open Destination Folder containg the Resulted File
+    shell.openPath(dest);
+
+    mainWindow.webContents.send('image:done');
+  } catch (err) {
+    console.log(err);
+  }
+}
 
 // For Mac
 app.on('window-all-closed', () => {
@@ -136,4 +170,4 @@ app.on('activate', () => {
 });
 
 // Deprecation Warnings
-// app.allowRendererProcessReuse = true;
+app.allowRendererProcessReuse = true;

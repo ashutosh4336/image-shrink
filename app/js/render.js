@@ -16,11 +16,6 @@ document.getElementById('output-path').innerText = path.join(
 form.addEventListener('submit', (e) => {
   e.preventDefault();
 
-  if (!img) {
-    console.log('Image not exist');
-    return '';
-  }
-
   const imgPath = img.files[0].path;
   const quality = slider.value;
 
@@ -28,5 +23,13 @@ form.addEventListener('submit', (e) => {
   ipcRenderer.send('image:minimize', {
     imgPath,
     quality,
+  });
+});
+
+// On Done
+
+ipcRenderer.on('image:done', () => {
+  M.toast({
+    html: `Image Resized to ${slider.value}% Quality`,
   });
 });
