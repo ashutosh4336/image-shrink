@@ -14,6 +14,7 @@ const imagemin = require('imagemin');
 const imageminMozjpeg = require('imagemin-mozjpeg');
 const imageminPngquant = require('imagemin-pngquant');
 const slash = require('slash');
+const log = require('electron-log');
 
 // Check Platform
 const isMac = process.platform === 'darwin' ? true : false;
@@ -21,8 +22,8 @@ const isLinux = process.platform === 'linux' ? true : false;
 const isWin = process.platform === 'win32' ? true : false;
 
 // Set ENV
-process.env.NODE_ENV = 'development';
-// process.env.NODE_ENV = 'production';
+// process.env.NODE_ENV = 'development';
+process.env.NODE_ENV = 'production';
 const isDev = process.env.NODE_ENV !== 'production' ? true : false;
 
 let mainWindow;
@@ -39,6 +40,7 @@ function createMainWindow() {
     backgroundColor: '#fff',
     webPreferences: {
       nodeIntegration: true,
+      enableRemoteModule: true,
     },
   });
 
@@ -55,7 +57,7 @@ function createAboutWindow() {
     height: 300,
     icon: `${__dirname}/assets/icons/Icon_256x256.png`,
     resizable: false,
-    backgroundColor: '#ea8512',
+    backgroundColor: '#880e4f',
   });
 
   aboutWindow.loadFile(`./app/about.html`);
@@ -143,7 +145,8 @@ async function shrinkImage({ imgPath, quality, dest }) {
         }),
       ],
     });
-    console.log(files);
+    // console.log(files);
+    log.info(files);
 
     // Open Destination Folder containg the Resulted File
     shell.openPath(dest);
@@ -151,6 +154,7 @@ async function shrinkImage({ imgPath, quality, dest }) {
     mainWindow.webContents.send('image:done');
   } catch (err) {
     console.log(err);
+    log.error(err);
   }
 }
 
@@ -171,3 +175,4 @@ app.on('activate', () => {
 
 // Deprecation Warnings
 app.allowRendererProcessReuse = true;
+app.enableRemoteModule = true;
